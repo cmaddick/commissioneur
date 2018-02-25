@@ -1,0 +1,1 @@
+Note: This directory is curretnely emptey as there are curretnly now images for the website. Once images have been created, this README can be deleted/updated.

@@ -1,0 +1,3 @@
+# commissioneur server
+
+This directory contains the PHP source code needed to run the commissioneur server. The server will probably be developed with PHP storm but any tool will do the job I guess...
