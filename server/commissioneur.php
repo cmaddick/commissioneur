@@ -33,8 +33,28 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
     return $response;
 });
 
-// Render Twig template in route
 $app->get('/login', function ($request, $response, $args) {
+    return $this->view->render($response, 'login.html');
+});
+
+$app->get('/signup', function ($request, $response, $args) {
+    return $this->view->render($response, 'signup.html', [
+        'title' => 'Sign up'
+    ]);
+});
+
+$app->post('/signup', function(Request $request, Response $response) {
+    $email = $request->getAttribute('inputEmail');
+    $displayname = $request->getAttribute('inputDisplayName');
+    $password = $request->getAttribute('inputPassword');
+    $repassword = $request->getAttribute('inputRePassword');
+});
+
+$app->get('/submission/{submissionid}', function ($request, $response, $args) {
+    return $this->view->render($response, 'login.html');
+});
+
+$app->get('/profile/{profileid}', function ($request, $response, $args) {
     return $this->view->render($response, 'login.html');
 });
 
