@@ -25,6 +25,7 @@ $container['view'] = function ($container) {
     return $view;
 };
 
+// Set up the database connection and add it as a slim container
 $container['db'] = function ($container) {
     $settings = $container['settings'];
     $pdo = new PDO('mysql:host=localhost;dbname=commission', $settings['db']['user'], $settings['db']['pass']);
@@ -41,9 +42,39 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
     return $response;
 });
 
+$app->get('/home', function ($request, $response, $args) {
+    return $this->view->render($response, 'home.html', [
+        'session' => $_SESSION
+    ]);
+})->setName('home');
+
 $app->get('/login', function ($request, $response, $args) {
     return $this->view->render($response, 'login.html');
 })->setName('login');
+
+$app->post('/login', function ($request, $response, $args) {
+    $allPostPutVars = $request->getParsedBody();
+
+    $email = $allPostPutVars['inputEmail'];
+    $password = $allPostPutVars['inputPassword'];
+
+    $pdo = $this->db;
+
+    $stmt = $pdo->prepare('SELECT * FROM users WHERE Email = ? AND Password = ?');
+    $stmt->execute([$email, $password]);
+    $row = $stmt->fetch();
+
+    if(!$row) {
+        $userID = $row['UserID'];
+        $displayName = $row['DisplayName'];
+
+        $_SESSION['UserID'] = $userID;
+        $_SESSION['DisplayName'] = $displayName;
+
+        $router = $this->router;
+        return $response->withStatus(303)->withHeader('Location', $router->pathFor('home'));
+    }
+});
 
 $app->get('/signup', function ($request, $response, $args) {
     return $this->view->render($response, 'signup.html', [
@@ -53,6 +84,7 @@ $app->get('/signup', function ($request, $response, $args) {
 
 $app->post('/signup', function(Request $request, Response $response) {
 
+    // Get form data
     $allPostPutVars = $request->getParsedBody();
 
     $email = $allPostPutVars['inputEmail'];
@@ -99,6 +131,19 @@ $app->get('/submission/{submissionid}', function ($request, $response, $args) {
 
 $app->get('/profile/{profileid}', function ($request, $response, $args) {
     return $this->view->render($response, 'login.html');
+});
+
+// Static site image route handling
+$app->get('/resources/images/{data:\w+}', function($request, $response, $args) {
+    $data = $args['data'];
+    $image = @file_get_contents("http://localhost/public/resources/images/$data");
+    if($image === FALSE) {
+        $handler = $this->notFoundHandler;
+        return $handler($request, $response);
+    }
+
+    $response->write($image);
+    return $response->withHeader('Content-Type', FILEINFO_MIME_TYPE);
 });
 
 $app->run();
