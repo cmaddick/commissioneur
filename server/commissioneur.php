@@ -25,6 +25,14 @@ $container['view'] = function ($container) {
     return $view;
 };
 
+$container['db'] = function ($container) {
+    $settings = $container['settings'];
+    $pdo = new PDO('mysql:host=localhost;dbname=commission', $settings['db']['user'], $settings['db']['pass']);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    return $pdo;
+};
+
 // Routing functions
 $app->get('/hello/{name}', function (Request $request, Response $response, array $args) {
     $name = $args['name'];
@@ -35,7 +43,7 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
 
 $app->get('/login', function ($request, $response, $args) {
     return $this->view->render($response, 'login.html');
-});
+})->setName('login');
 
 $app->get('/signup', function ($request, $response, $args) {
     return $this->view->render($response, 'signup.html', [
@@ -44,11 +52,46 @@ $app->get('/signup', function ($request, $response, $args) {
 });
 
 $app->post('/signup', function(Request $request, Response $response) {
-    $email = $request->getAttribute('inputEmail');
-    $displayname = $request->getAttribute('inputDisplayName');
-    $password = $request->getAttribute('inputPassword');
-    $repassword = $request->getAttribute('inputRePassword');
+
+    $allPostPutVars = $request->getParsedBody();
+
+    $email = $allPostPutVars['inputEmail'];
+    $displayname = $allPostPutVars['inputDisplayName'];
+    $password = $allPostPutVars['inputPassword'];
+    $repassword = $allPostPutVars['inputRePassword'];
+
+    $pdo = $this->db;
+
+    $stmt = $pdo->prepare('SELECT * FROM users WHERE Email = ?');
+    $stmt->execute([$email]);
+    $row = $stmt->fetch();
+
+    if (!$row) {
+        $userID = mt_rand(100000000, 999999999);
+
+        $stmt = $pdo->prepare('SELECT * FROM users WHERE UserID = ?');
+        $stmt->execute([$userID]);
+        $row = $stmt->fetch();
+
+        if (!$row) {
+            $stmt = $pdo->prepare('INSERT INTO `users` (`UserID`, `Email`, `Password`, `DisplayName`) VALUES (:userid, :email, :password, :displayname)');
+            $stmt->bindParam(':userid', $userID);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':password', $password);
+            $stmt->bindParam(':displayname', $displayname);
+            $stmt->execute();
+
+            $router = $this->router;
+            return $response->withStatus(303)->withHeader('Location', $router->pathFor('signupsuccess'));
+        }
+    } else {
+
+    }
 });
+
+$app->get('/signupsuccess', function ($request, $response, $args) {
+    return $this->view->render($response, 'signupsuccess.html');
+})->setName('signupsuccess');
 
 $app->get('/submission/{submissionid}', function ($request, $response, $args) {
     return $this->view->render($response, 'login.html');
