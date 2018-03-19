@@ -74,20 +74,24 @@ $app->post('/login', function ($request, Response $response, $args) {
 
     $pdo = $this->db;
 
-    $stmt = $pdo->prepare('SELECT * FROM users WHERE Email = ? AND Password = ?');
-    $stmt->execute([$email, $password]);
+    $stmt = $pdo->prepare('SELECT * FROM users WHERE Email = ?');
+    $stmt->execute([$email]);
     $row = $stmt->fetch();
 
     if($row) {
-        $userID = $row['UserID'];
-        $displayName = $row['DisplayName'];
 
-        $_SESSION['IsLoggedIn'] = 'true';
-        $_SESSION['UserID'] = $userID;
-        $_SESSION['DisplayName'] = $displayName;
+        $dbPasswordHash = $row['Password'];
 
-        $router = $this->router;
-        return $response->withStatus(303)->withHeader('Location', $router->pathFor('home'));
+        if(password_verify($password, $dbPasswordHash)) {
+            $userID = $row['UserID'];
+            $displayName = $row['DisplayName'];
+            $_SESSION['IsLoggedIn'] = 'true';
+            $_SESSION['UserID'] = $userID;
+            $_SESSION['DisplayName'] = $displayName;
+
+            $router = $this->router;
+            return $response->withStatus(303)->withHeader('Location', $router->pathFor('home'));
+        }
     }
 });
 
@@ -106,6 +110,8 @@ $app->post('/signup', function(Request $request, Response $response) {
     $displayname = $allPostPutVars['inputDisplayName'];
     $password = $allPostPutVars['inputPassword'];
     $repassword = $allPostPutVars['inputRePassword'];
+
+    $password = password_hash($password, PASSWORD_DEFAULT);
 
     $pdo = $this->db;
 
@@ -146,6 +152,13 @@ $app->get('/submission/{submissionid}', function ($request, $response, $args) {
 
 $app->get('/profile/{profileid}', function ($request, $response, $args) {
     return $this->view->render($response, 'login.html');
+});
+
+$app->get('/logout', function (Request $request, Response $response){
+    session_destroy();
+
+    $router = $this->router;
+    return $response->withStatus(303)->withHeader('Location', $router->pathFor('home'));
 });
 
 // Static site image route handling
