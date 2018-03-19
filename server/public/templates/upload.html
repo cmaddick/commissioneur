@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block body %}
+
+<div class="container">
+    <form action="upload" method="post" enctype="multipart/form-data">
+
+        <label for="inputTitle" class="sr-only">Title</label>
+        <input type="text" id="inputTitle" name="inputTitle" class="form-control" placeholder="Title" required autofocus>
+        <label for="inputType" class="sr-only">Submission type</label>
+        <select id="inputType" name="inputType">
+            <option value="image">Image</option>
+            <option value="audio">Audio</option>
+        </select>
+        <label for="inputFile" class="sr-only">File</label>
+        <input type="file" id="inputFile" name="inputFile" class="form-control" placeholder="Upload File..." required>
+        <label for="inputDescription" class="sr-only">Description</label>
+        <input type="text" id="inputDescription" name="inputDescription" class="form-control" placeholder="Enter a desicription..." required>
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Upload</button>
+</form>
+</div>
+
+{% endblock %}
