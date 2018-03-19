@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
@@ -11,6 +13,13 @@ $app = new \Slim\App(['settings' => $config]);
 
 // Get container
 $container = $app->getContainer();
+
+// Add session management middleware
+$app->add(new \Slim\Middleware\Session([
+    'name' => 'dummy_session',
+    'autorefresh' => true,
+    'lifetime' => '24 hours'
+]));
 
 // Register template viewing component on container
 $container['view'] = function ($container) {
@@ -34,6 +43,11 @@ $container['db'] = function ($container) {
     return $pdo;
 };
 
+// Register session middleware to app
+$container['session'] = function ($c) {
+    return new \SlimSession\Helper;
+};
+
 // Routing functions
 $app->get('/hello/{name}', function (Request $request, Response $response, array $args) {
     $name = $args['name'];
@@ -52,7 +66,7 @@ $app->get('/login', function ($request, $response, $args) {
     return $this->view->render($response, 'login.html');
 })->setName('login');
 
-$app->post('/login', function ($request, $response, $args) {
+$app->post('/login', function ($request, Response $response, $args) {
     $allPostPutVars = $request->getParsedBody();
 
     $email = $allPostPutVars['inputEmail'];
@@ -64,10 +78,11 @@ $app->post('/login', function ($request, $response, $args) {
     $stmt->execute([$email, $password]);
     $row = $stmt->fetch();
 
-    if(!$row) {
+    if($row) {
         $userID = $row['UserID'];
         $displayName = $row['DisplayName'];
 
+        $_SESSION['IsLoggedIn'] = 'true';
         $_SESSION['UserID'] = $userID;
         $_SESSION['DisplayName'] = $displayName;
 
