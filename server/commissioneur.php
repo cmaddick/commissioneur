@@ -22,6 +22,13 @@ $app->add(new \Slim\Middleware\Session([
     'lifetime' => '24 hours'
 ]));
 
+// Add csrf protection middleware
+$app->add(new \Slim\Csrf\Guard);
+
+$container['csrf'] = function ($c) {
+    return new \Slim\Csrf\Guard;
+};
+
 // Register template viewing component on container
 $container['view'] = function ($container) {
     $view = new \Slim\Views\Twig('public/templates', [
@@ -67,7 +74,24 @@ $app->get('/home', function ($request, $response, $args) {
 })->setName('home');
 
 $app->get('/login', function ($request, $response, $args) {
-    return $this->view->render($response, 'login.html');
+    // CSRF token name and value
+    $nameKey = $this->csrf->getTokenNameKey();
+    $valueKey = $this->csrf->getTokenValueKey();
+    $name = $request->getAttribute($nameKey);
+    $value = $request->getAttribute($valueKey);
+
+    $csrfKeysValues = [
+        'nameKey' => $nameKey,
+        'name' => $name,
+        'valueKey' => $valueKey,
+        'value' => $value
+    ];
+
+    return $this->view->render($response, 'login.html', [
+        'title' => 'Login',
+        'session' => $_SESSION,
+        'csrf' => $csrfKeysValues
+    ]);
 })->setName('login');
 
 $app->post('/login', function ($request, Response $response, $args) {
@@ -100,8 +124,22 @@ $app->post('/login', function ($request, Response $response, $args) {
 });
 
 $app->get('/signup', function ($request, $response, $args) {
+    // CSRF token name and value
+    $nameKey = $this->csrf->getTokenNameKey();
+    $valueKey = $this->csrf->getTokenValueKey();
+    $name = $request->getAttribute($nameKey);
+    $value = $request->getAttribute($valueKey);
+
+    $csrfKeysValues = [
+        'nameKey' => $nameKey,
+        'name' => $name,
+        'valueKey' => $valueKey,
+        'value' => $value
+    ];
+
     return $this->view->render($response, 'signup.html', [
-        'title' => 'Sign up'
+        'title' => 'Sign up',
+        'csrf' => $csrfKeysValues
     ]);
 });
 
@@ -186,8 +224,22 @@ $app->get('/logout', function (Request $request, Response $response){
 });
 
 $app->get('/upload', function ($request, $response, $args) {
+    // CSRF token name and value
+    $nameKey = $this->csrf->getTokenNameKey();
+    $valueKey = $this->csrf->getTokenValueKey();
+    $name = $request->getAttribute($nameKey);
+    $value = $request->getAttribute($valueKey);
+
+    $csrfKeysValues = [
+        'nameKey' => $nameKey,
+        'name' => $name,
+        'valueKey' => $valueKey,
+        'value' => $value
+    ];
+
     return $this->view->render($response, 'upload.html', [
-        'session' => $_SESSION
+        'session' => $_SESSION,
+        'csrf' => $csrfKeysValues
     ]);
 });
 

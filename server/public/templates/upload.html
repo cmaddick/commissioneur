@@ -4,6 +4,9 @@
 <div class="container">
     <form action="upload" method="post" enctype="multipart/form-data">
 
+        <input type="hidden" name="{{csrf.nameKey}}" value="{{csrf.name}}">
+        <input type="hidden" name="{{csrf.valueKey}}" value="{{csrf.value}}">
+
         <label for="inputTitle" class="sr-only">Title</label>
         <input type="text" id="inputTitle" name="inputTitle" class="form-control" placeholder="Title" required autofocus>
         <label for="inputType" class="sr-only">Submission type</label>
