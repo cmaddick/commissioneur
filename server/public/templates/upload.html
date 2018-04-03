@@ -11,7 +11,7 @@
 <body>
 {% extends "base.html" %}
 {% block body %}
-
+<p class="heading">Upload a file...</p>
 <div class="container">
     <form action="upload" method="post" enctype="multipart/form-data">
         <div class="table-responsive">
@@ -22,11 +22,51 @@
                         <p id="titleType">Type of Creation</p>
                     </td>
                     <td>
+                        <div>
+                            <input type="radio" id="typeArt" name="type" value="art">
+                            <label for="typeArt">Art</label>
 
-                        <select name="inputType">
-                            <option value="image">Image</option>
-                            <option value="audio">Audio</option>
-                        </select>
+                            <select name="inputType">
+                                <option value="image">Image</option>
+                                <option value="audio">Audio</option>
+                            </select>
+
+                            <input type="radio" id="typeCrafts" name="type" value="crafts">
+                            <label for="typeCrafts">Crafts</label>
+                            <select name="inputType">
+                                <option value="image">Image</option>
+                                <option value="audio">Audio</option>
+                            </select>
+
+                            <input type="radio" id="typeMusic" name="type" value="music">
+                            <label for="typeMusic">Music</label>
+                            <select name="inputType">
+                                <option value="image">Image</option>
+                                <option value="audio">Audio</option>
+                            </select>
+
+                            <input type="radio" id="typePhoto" name="type" value="photo">
+                            <label for="typePhoto">Photo</label>
+                            <select name="inputType">
+                                <option value="image">Image</option>
+                                <option value="audio">Audio</option>
+                            </select>
+
+                            <input type="radio" id="typeFilm" name="type" value="film">
+                            <label for="typeFilm">Film</label>
+                            <select name="inputType">
+                                <option value="image">Image</option>
+                                <option value="audio">Audio</option>
+                            </select>
+
+                            <input type="radio" id="typeAnimation" name="type" value="animation">
+                            <label for="typeAnimation">Animation</label>
+                            <select name="inputType">
+                                <option value="image">Image</option>
+                                <option value="audio">Audio</option>
+                            </select>
+                        </div>
+
                     </td>
                 </tr>
                 <tr>
@@ -65,9 +105,10 @@
         <input type="hidden" name="{{csrf.nameKey}}" value="{{csrf.name}}">
         <input type="hidden" name="{{csrf.valueKey}}" value="{{csrf.value}}">
 
-
-
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Upload</button>
+        <div class="button-wrapper">
+            <button class="btn btn-default" >Save Draft</button>
+            <button class="btn btn-default" type="submit">Upload</button>
+        </div>
     </form>
 </div>
 

@@ -1,5 +1,11 @@
-.form-textbox {
-    height: 25px !important;
+.heading{
 
-    width: 220px !important;
+}
+.button-wrapper{
+    text-align: center;
+}
+
+.button{
+    position: center;
+    top: 50%;
 }
