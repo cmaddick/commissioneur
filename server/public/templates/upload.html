@@ -1,26 +1,76 @@
+<!-- This doesn't seem to work when I put in the '/upload/' URL so I inserted the HTML to get it to work. Once the URL works, the HTML can be deleted. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="../resources/css/upload.css">
+</head>
+<body>
 {% extends "base.html" %}
 {% block body %}
 
 <div class="container">
     <form action="upload" method="post" enctype="multipart/form-data">
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <td width="10%">
+                        <label for="titleType" class="sr-only">Submission type</label>
+                        <p id="titleType">Type of Creation</p>
+                    </td>
+                    <td>
+
+                        <select name="inputType">
+                            <option value="image">Image</option>
+                            <option value="audio">Audio</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>File upload</p>
+                    </td>
+                    <td>
+                        <label for="inputFile" class="sr-only">File</label>
+                        <input type="file" id="inputFile" name="inputFile" class="form-control" placeholder="Upload File..." required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Upload title + description</p>
+                    </td>
+                    <td>
+                        <label for="inputTitle" class="sr-only">Title</label>
+                        <input type="text" id="inputTitle" name="inputTitle" class="form-control" placeholder="Title" required autofocus>
+                        <br>
+                        <label for="inputDescription" class="sr-only">Description</label>
+                        <input type="text" id="inputDescription" name="inputDescription" class="form-control" placeholder="Enter a desicription..." required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Tags (Seperated by commas)</p>
+                    </td>
+                    <td>
+                        <label for="inputTags" class="sr-only">Tags</label>
+                        <input type="text" id="inputTags" name="inputTags" class="form-control" placeholder="Enter tags seperated by commas..." height="20" width="20" required>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
         <input type="hidden" name="{{csrf.nameKey}}" value="{{csrf.name}}">
         <input type="hidden" name="{{csrf.valueKey}}" value="{{csrf.value}}">
 
-        <label for="inputTitle" class="sr-only">Title</label>
-        <input type="text" id="inputTitle" name="inputTitle" class="form-control" placeholder="Title" required autofocus>
-        <label for="inputType" class="sr-only">Submission type</label>
-        <select id="inputType" name="inputType">
-            <option value="image">Image</option>
-            <option value="audio">Audio</option>
-        </select>
-        <label for="inputFile" class="sr-only">File</label>
-        <input type="file" id="inputFile" name="inputFile" class="form-control" placeholder="Upload File..." required>
-        <label for="inputDescription" class="sr-only">Description</label>
-        <input type="text" id="inputDescription" name="inputDescription" class="form-control" placeholder="Enter a desicription..." required>
 
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Upload</button>
-</form>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Upload</button>
+    </form>
 </div>
 
 {% endblock %}
+</body>
+</html>
