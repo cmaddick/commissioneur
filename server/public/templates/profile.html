@@ -5,6 +5,11 @@
     <title>Title</title>
 </head>
 <body>
-
+{% set title = '{{ session.DisplayName }}&#39;s Profile' %}
+{% extends "base.html" %}
+{% block body %}
+{% include "navbar.html" %}
+<!-- body content goes here... -->
+{% endblock %}
 </body>
 </html>

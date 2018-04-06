@@ -5,19 +5,29 @@
 
 }
 
-/* styling the search bar section */
-.navbar-search {
-    float: left;
+@media (min-width: 767px) {
+    div#navbar-right-section {
+        float:right;
+        display:inline-block;
+    }
+    /* styling the search bar section */
+    .navbar-search {
+        display:inline-block;
+    }
+    /* styling the user login/profile section */
+    .navbar-user {
+        float: right;
+        list-style-type: none;
+    }
+    div#pull-right{
+        float:right;
+    }
 }
 
-/* styling the user login/profile section */
-.navbar-user {
-    float: right;
-    list-style-type: none;
-}
+
+
 
 .navbar-header {
     padding-top: 10px;
     padding-right: 10px;
 }
-
