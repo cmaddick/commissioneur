@@ -73,6 +73,7 @@ $app->get('/home', function ($request, $response, $args) {
     ]);
 })->setName('home');
 
+
 $app->get('/login', function ($request, $response, $args) {
     // CSRF token name and value
     $nameKey = $this->csrf->getTokenNameKey();

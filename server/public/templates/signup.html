@@ -1,22 +1,51 @@
 {% extends "base.html" %}
+{% block head %}
+<link rel="stylesheet" href="../public/resources/css/signin.css">
+{% endblock %}
 {% block body %}
-<div class="container">
+<div class="container col-sm-2 col-sm-offset-5">
 
-    <form action="signup" method="post">
-        <h2 class="form-signin-heading">Please register</h2>
+    <form class="form-signin" action="signup" method="post">
+        <img src="../public/resources/images/logo-large.png" alt="Commissioneur logo" width="289" height="48" class="center">
+        <h2 class="form-signin-heading">Sign up</h2>
 
         <input type="hidden" name="{{csrf.nameKey}}" value="{{csrf.name}}">
         <input type="hidden" name="{{csrf.valueKey}}" value="{{csrf.value}}">
 
-        <label for="inputEmail" class="sr-only">Email address</label>
-        <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-        <label for="inputDisplayName" class="sr-only">Email address</label>
-        <input type="text" id="inputDisplayName" name="inputDisplayName" class="form-control" placeholder="Display Name" required>
+        <label for="inputDisplayName" class="sr-only">Username</label>
+        <input type="text" id="inputDisplayName" name="inputDisplayName" class="form-control" placeholder="Username" required autofocus>
+
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" id="inputPassword" name="inputPassword" class="form-control" placeholder="Password" required>
-        <label for="inputRePassword" class="sr-only">Password</label>
-        <input type="password" id="inputRePassword" name="inputRePassword" class="form-control" placeholder="Re-enter Password" required>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+
+        <label for="inputRePassword" class="sr-only">Re-type password</label>
+        <input type="password" id="inputRePassword" name="inputRePassword" class="form-control" placeholder="Re-type Password" required>
+
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Email" required>
+
+        <label for="inputReEmail" class="sr-only">Re-type email</label>
+        <input type="email" id="inputReEmail" name="inputReEmail" class="form-control" placeholder="Re-type email" required>
+        <div>
+            <span>Date of Birth:</span>
+            <br>
+            <select id="year">
+                <option selected disabled>Year</option>
+            </select>
+            <select id="month">
+                <option selected disabled>Month</option>
+            </select>
+            <select id="day">
+                <option selected disabled>Day</option>
+            </select>
+        </div>
+
+        <div>
+            <!-- class for re-captcha technology -->
+            <p>Insert re-captcha here...</p>
+        </div>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up!</button>
     </form>
 
 </div>

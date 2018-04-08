@@ -1,16 +1,9 @@
-<!-- This doesn't seem to work when I put in the '/upload/' URL so I inserted the HTML to get it to work. Once the URL works, the HTML can be deleted. -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-    <link rel="stylesheet" href="../resources/css/upload.css">
-</head>
-<body>
 {% set title = 'Upload a file' %}
 {% extends "base.html" %}
+{% block head %}
+<link rel="stylesheet" href="../public/resources/css/navbar.css" />
+<link rel="stylesheet" href="../public/resources/css/upload.css">
+{% endblock %}
 {% block body %}
 {% include "navbar.html" %}
 <p class="heading">Upload a file...</p>
@@ -21,7 +14,7 @@
                 <tr colspan="8">
                     <td width="10%">
                         <label for="titleType" class="sr-only">Submission type</label>
-                        <p id="titleType">Type of Creation</p>
+                        <p id="titleType">Type of Creation<span class="required">*</span></p>
                     </td>
                     <td>
                         <div class="horizontal-scroll">
@@ -31,54 +24,64 @@
                                         <input type="radio" id="typeArt" name="type" value="art">
                                         <label for="typeArt">Art</label>
                                         <br>
-                                        <select name="inputType">
-                                            <option value="image">Image</option>
-                                            <option value="audio">Audio</option>
+                                        <select name="inputGenreArt">
+                                            <option selected disabled>Select Genre</option>
+                                            <option value="artAnthro">Anthro</option>
+                                            <option value="artAnime">Anime/Manga</option>
+                                            <option value="artCartoon">Cartoon</option>
+                                            <option value="artAnimal">Animals</option>
+                                            <option value="artCariectueres">Cariectueres</option>
                                         </select>
                                     </td>
                                     <td width="168px">
                                         <input type="radio" id="typeCrafts" name="type" value="crafts">
                                         <label for="typeCrafts">Crafts</label>
                                         <br>
-                                        <select name="inputType">
-                                            <option value="image">Image</option>
-                                            <option value="audio">Audio</option>
+                                        <select name="inputGenreCrafts">
+                                            <option selected disabled>Select Genre</option>
+                                            <option value="craftsScuplter">Sculptuer</option>
+                                            <option value="craftCosplay">Cosplay</option>
                                         </select>
                                     </td>
                                     <td width="168px">
                                         <input type="radio" id="typeMusic" name="type" value="music">
                                         <label for="typeMusic">Music</label>
                                         <br>
-                                        <select name="inputType">
-                                            <option value="image">Image</option>
-                                            <option value="audio">Audio</option>
+                                        <select name="inputGenreMusic">
+                                            <option selected disabled>Select Genre</option>
+                                            <option value="musicIndie">Indie</option>
+                                            <option value="musicRock">Rock</option>
+                                            <option value="musicHeavyMetal">Heavy Metal</option>
+                                            <option value="musicElectronic">Electronic</option>
                                         </select>
                                     </td>
                                     <td width="168px">
                                         <input type="radio" id="typePhoto" name="type" value="photo">
                                         <label for="typePhoto">Photo</label>
                                         <br>
-                                        <select name="inputType">
-                                            <option value="image">Image</option>
-                                            <option value="audio">Audio</option>
+                                        <select name="inputGenrePhoto">
+                                            <option selected disabled>Select Genre</option>
+                                            <option value="photoDigital">Digital</option>
                                         </select>
                                     </td>
                                     <td width="168px">
                                         <input type="radio" id="typeFilm" name="type" value="film">
                                         <label for="typeFilm">Film</label>
                                         <br>
-                                        <select name="inputType">
-                                            <option value="image">Image</option>
-                                            <option value="audio">Audio</option>
+                                        <select name="inputGenreFilm">
+                                            <option selected disabled>Select Genre</option>
                                         </select>
                                     </td>
                                     <td width="168px">
                                         <input type="radio" id="typeAnimation" name="type" value="animation">
                                         <label for="typeAnimation">Animation</label>
                                         <br>
-                                        <select name="inputType">
-                                            <option value="image">Image</option>
-                                            <option value="audio">Audio</option>
+                                        <select name="inputGenreAnimation">
+                                            <option selected disabled>Select Genre</option>
+                                            <option value="animationCartoon">Cartoon</option>
+                                            <option value="animationTraditional">Traditional</option>
+                                            <option value="animationAnime">Anime style</option>
+                                            <option value="animationAnthro">Antrhro style</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -88,7 +91,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <p>File upload</p>
+                        <p>File upload<span class="required">*</span></p>
                     </td>
                     <td>
                         <label for="inputFile" class="sr-only">File</label>
@@ -97,23 +100,23 @@
                 </tr>
                 <tr>
                     <td>
-                        <p>Upload title + description</p>
+                        <p>Upload title<span class="required">*</span> + description</p>
                     </td>
                     <td>
                         <label for="inputTitle" class="sr-only">Title</label>
                         <input type="text" id="inputTitle" name="inputTitle" class="form-control" placeholder="Title" required autofocus>
                         <br>
-                        <label for="inputDescription" class="sr-only">Description</label>
-                        <input type="text" id="inputDescription" name="inputDescription" class="form-control" placeholder="Enter a desicription..." required>
+                        <label for="inputDescription" class="sr-only">Description (optional)</label>
+                        <input type="text" id="inputDescription" name="inputDescription" class="form-control" placeholder="Enter a desicription (optional)...">
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <p>Tags (Seperated by commas)</p>
+                        <p>Tags (Optional, seperated by commas)</p>
                     </td>
                     <td>
-                        <label for="inputTags" class="sr-only">Tags</label>
-                        <input type="text" id="inputTags" name="inputTags" class="form-control" placeholder="Enter tags seperated by commas..." height="20" width="20" required>
+                        <label for="inputTags" class="sr-only">Tags (optional)</label>
+                        <input type="text" id="inputTags" name="inputTags" class="form-control" placeholder="Enter tags seperated by commas..." height="20" width="20">
                     </td>
                 </tr>
             </table>
@@ -128,7 +131,5 @@
         </div>
     </form>
 </div>
-
 {% endblock %}
-</body>
-</html>
+
