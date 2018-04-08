@@ -34,6 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             //so now we set variables accordingly
             $username = $conn->real_escape_string($username);
+            //using bcrypt method means that password char needs to be over 60 in database
             $password = password_hash($password, PASSWORD_BCRYPT); //bcrypt has password for security
 
             $sql = "INSERT INTO USERLOGIN (USERNAME, PASSWORD)
