@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
+
+    <style type="text/css">
+
+        body{ font: 14px sans-serif; }
+
+        .wrapper{ margin:0 auto; width: 350px; padding: 20px; }
+
+    </style>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+</head>
+<body>
+<div class="wrapper">
+<h2>Sign Up</h2><br>
+<p>Please fill this form to create an account:</p>
+<form action="SignUp.php" method="post">
+    <div class="form-group">
+    <label>Username:</label>
+    <br> <input type="text" name="uname" class="form-control" required><br>
+    </div>
+    <div class="form-group">
+    <label>Password:</label>
+    <br><input type="password" name="pword" class="form-control" required><br>
+    </div>
+    <div class="form-group">
+    <label>Confirm Password:</label>
+    <br> <input type="password" name="cpword" class="form-control" required><br>
+    </div>
+    <div class="form-group">
+        <br> <input type="submit" class="btn btn-primary" value="Submit">
+    </div>
+    <p>Already have an account? <a href="LoginForm.html">Login here</a>.</p>
+</form>
+</div>
+</body>
+</html>
