@@ -10,7 +10,7 @@
     padding-top: 20px;
 }
 
-.sidebar img {
+.sidebar-image img {
     padding: 6px 8px 6px 16px;
     display: block;
 }
@@ -31,4 +31,8 @@
 
 .content {
     margin-left: 160px;
+}
+
+.images img{
+    padding: 8px 6px;
 }
