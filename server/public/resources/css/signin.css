@@ -6,7 +6,6 @@ body {
 
 .form-signin {
     max-width: 330px;
-    padding: 15px;
     margin: 0 auto;
 }
 .form-signin .form-signin-heading,
@@ -35,7 +34,7 @@ body {
     border-top-right-radius: 0;
 }
 .form-signin select{
-    width: 80px;
+    width: 90px;
 }
 
 .dob-table td{

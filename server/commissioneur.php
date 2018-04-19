@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+session_destroy();
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -45,7 +46,7 @@ $container['view'] = function ($container) {
 // Set up the database connection and add it as a slim container
 $container['db'] = function ($container) {
     $settings = $container['settings'];
-    $pdo = new PDO('mysql:host=localhost;dbname=commission', $settings['db']['user'], $settings['db']['pass']);
+    $pdo = new PDO('mysql:host=localhost;dbname=commissioneur', $settings['db']['user'], $settings['db']['pass']);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     return $pdo;
@@ -72,6 +73,13 @@ $app->get('/home', function ($request, $response, $args) {
         'session' => $_SESSION
     ]);
 })->setName('home');
+
+// the browse page is essentially the home page
+$app->get('/browse', function ($request, $response, $args) {
+    return $this->view->render($response, 'home.html', [
+        'session' => $_SESSION
+    ]);
+})->setName('browse');
 
 
 $app->get('/login', function ($request, $response, $args) {
@@ -164,7 +172,6 @@ $app->post('/signup', function(Request $request, Response $response) {
 
     if (!$row) {
         $userID = mt_rand(100000000, 999999999);
-
         $stmt = $pdo->prepare('SELECT * FROM users WHERE UserID = ?');
         $stmt->execute([$userID]);
         $row = $stmt->fetch();

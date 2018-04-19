@@ -24,6 +24,8 @@
 
 .sidebarText a{
     text-decoration: none;
+    font-size: 15px;
+    color: #818181;
 }
 .sidebarText a:hover {
     color: #4b4b4b;
@@ -36,3 +38,8 @@
 .images img{
     padding: 8px 6px;
 }
+
+.title{
+    font-size: 20px;
+}
+

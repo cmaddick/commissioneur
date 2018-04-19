@@ -1,4 +1,8 @@
-﻿/* style info for the commissioneur logo link */
+﻿.navbar{
+    z-index: 1000; /* hack to get the navbar to always show at the top */
+}
+
+/* style info for the commissioneur logo link */
 @media (max-width: 767px) {
     .navbar-image {
         display: inline-block;
