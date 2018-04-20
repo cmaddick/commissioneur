@@ -81,6 +81,19 @@ $app->get('/browse', function ($request, $response, $args) {
     ]);
 })->setName('browse');
 
+// router for shop page
+$app->get('/shop', function ($request, $response, $args) {
+    return $this->view->render($response, 'shop.html', [
+        'session' => $_SESSION
+    ]);
+})->setName('shop');
+
+// router for commissions page
+$app->get('/commissions', function ($request, $response, $args) {
+    return $this->view->render($response, 'commissions.html', [
+        'session' => $_SESSION
+    ]);
+})->setName('commissions');
 
 $app->get('/login', function ($request, $response, $args) {
     // CSRF token name and value
