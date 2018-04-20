@@ -3,29 +3,13 @@
 {% block head %}
 <!-- navbar CSS -->
 <link rel="stylesheet" href="../public/resources/css/navbar.css" />
-<link rel="stylesheet" href="../public/resources/css/home.css" />
+<link rel="stylesheet" href="../public/resources/css/sidebar.css" />
 {% endblock %}
 {% block body %}
 {% include "navbar.html" %}
 <!-- body content start -->
 <div class="flex-container">
-    <div class="sidebar">
-        <div class="sidebarText">
-            <span>Filters</span>
-            <a href="#" class="sidebarText">Up and coming</a>
-            <a href="#" class="sidebarText">Popular</a>
-            <a href="#" class="sidebarText">Not so popular</a>
-            <span>Categories</span>
-            <a href="#" class="sidebarText">Digital Art</a>
-            <a href="#" class="sidebarText">Traditional Art</a>
-            <a href="#" class="sidebarText">Photography</a>
-            <a href="#" class="sidebarText">Crafting</a>
-            <a href="#" class="sidebarText">Music</a>
-            <a href="#" class="sidebarText">Writing</a>
-            <a href="#" class="sidebarText">Films</a>
-            <a href="#" class="sidebarText">Animation</a>
-        </div>
-    </div>
+    {% include "sidebar.html" %}
     <div class="container-fluid content">
         <div class="title">
             <span>All Creations - Newly Uploaded</span>

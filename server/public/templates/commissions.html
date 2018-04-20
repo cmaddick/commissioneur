@@ -3,8 +3,21 @@
 {% block head %}
 <!-- navbar CSS -->
 <link rel="stylesheet" href="../public/resources/css/navbar.css" />
+<link rel="stylesheet" href="../public/resources/css/sidebar.css" />
 {% endblock %}
 {% block body %}
 {% include "navbar.html" %}
 <!-- body content goes here... -->
+<div class="flex-container">
+{% include "sidebar.html" %}
+    <div class="container-fluid content">
+        <div class="title">
+            <span>Creators open for a Commission - Digital Art</span>
+        </div>
+        <div>
+            <!-- div for images -->
+            This is a test
+        </div>
+    </div>
+</div>
 {% endblock %}
