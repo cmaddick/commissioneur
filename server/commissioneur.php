@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-session_destroy();
+session_destroy(); //it seems counterintuitive but this gets rid of the php warnings as seen in an earlier version of the application
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
