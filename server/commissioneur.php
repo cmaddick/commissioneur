@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-session_destroy(); //it seems counterintuitive but this gets rid of the php warnings as seen in an earlier version of the application
+error_reporting(E_ALL ^ E_WARNING); // suppress the php warnings
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -95,6 +95,7 @@ $app->get('/commissions', function ($request, $response, $args) {
     ]);
 })->setName('commissions');
 
+//get router for login page
 $app->get('/login', function ($request, $response, $args) {
     // CSRF token name and value
     $nameKey = $this->csrf->getTokenNameKey();
@@ -130,7 +131,7 @@ $app->post('/login', function ($request, Response $response, $args) {
 
     if($row) {
 
-        $dbPasswordHash = $row['Password'];
+        $dbPasswordHash = $row['PASSWORD'];
 
         if(password_verify($password, $dbPasswordHash)) {
             $userID = $row['UserID'];
@@ -145,6 +146,7 @@ $app->post('/login', function ($request, Response $response, $args) {
     }
 });
 
+//get router for signup page
 $app->get('/signup', function ($request, $response, $args) {
     // CSRF token name and value
     $nameKey = $this->csrf->getTokenNameKey();
@@ -163,6 +165,7 @@ $app->get('/signup', function ($request, $response, $args) {
         'title' => 'Sign up',
         'csrf' => $csrfKeysValues
     ]);
+
 });
 
 $app->post('/signup', function(Request $request, Response $response) {
@@ -203,6 +206,7 @@ $app->post('/signup', function(Request $request, Response $response) {
     } else {
 
     }
+
 });
 
 $app->get('/signupsuccess', function ($request, $response, $args) {
@@ -234,7 +238,7 @@ $app->get('/submission/{submissionid}', function ($request, $response, $args) {
 })->setName('submission');;
 
 $app->get('/profile/{profileid}', function ($request, $response, $args) {
-    return $this->view->render($response, 'login.html');
+    return $this->view->render($response, 'profile.html');
 });
 
 $app->get('/logout', function (Request $request, Response $response){
