@@ -45,7 +45,7 @@ $container['view'] = function ($container) {
 // Set up the database connection and add it as a slim container
 $container['db'] = function ($container) {
     $settings = $container['settings'];
-    $pdo = new PDO('mysql:host=localhost;dbname=commission', $settings['db']['user'], $settings['db']['pass']);
+    $pdo = new PDO('mysql:host=' . $settings['db']['host'] .';dbname=' . $settings['db']['dbname'], $settings['db']['user'], $settings['db']['pass']);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     return $pdo;
