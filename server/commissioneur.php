@@ -1,7 +1,6 @@
 <?php
 
 session_start();
-error_reporting(E_ALL ^ E_WARNING); // suppress the php warnings
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -46,7 +45,7 @@ $container['view'] = function ($container) {
 // Set up the database connection and add it as a slim container
 $container['db'] = function ($container) {
     $settings = $container['settings'];
-    $pdo = new PDO('mysql:host=localhost;dbname=commissioneur', $settings['db']['user'], $settings['db']['pass']);
+    $pdo = new PDO('mysql:host=localhost;dbname=commission', $settings['db']['user'], $settings['db']['pass']);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     return $pdo;
@@ -95,7 +94,6 @@ $app->get('/commissions', function ($request, $response, $args) {
     ]);
 })->setName('commissions');
 
-//get router for login page
 $app->get('/login', function ($request, $response, $args) {
     // CSRF token name and value
     $nameKey = $this->csrf->getTokenNameKey();
@@ -131,7 +129,7 @@ $app->post('/login', function ($request, Response $response, $args) {
 
     if($row) {
 
-        $dbPasswordHash = $row['PASSWORD'];
+        $dbPasswordHash = $row['Password'];
 
         if(password_verify($password, $dbPasswordHash)) {
             $userID = $row['UserID'];
@@ -146,7 +144,6 @@ $app->post('/login', function ($request, Response $response, $args) {
     }
 });
 
-//get router for signup page
 $app->get('/signup', function ($request, $response, $args) {
     // CSRF token name and value
     $nameKey = $this->csrf->getTokenNameKey();
@@ -165,7 +162,6 @@ $app->get('/signup', function ($request, $response, $args) {
         'title' => 'Sign up',
         'csrf' => $csrfKeysValues
     ]);
-
 });
 
 $app->post('/signup', function(Request $request, Response $response) {
@@ -206,7 +202,6 @@ $app->post('/signup', function(Request $request, Response $response) {
     } else {
 
     }
-
 });
 
 $app->get('/signupsuccess', function ($request, $response, $args) {
