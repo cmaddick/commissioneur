@@ -1,1 +1,0 @@
-Note: This directory is currently empty as there are currently now JavaScript source files for the website. Once they have been created, this README can be deleted/updated.

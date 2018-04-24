@@ -1,0 +1,130 @@
+{% set title = 'Your Profile' %}
+{% extends "base.html" %}
+{% block head %}
+<!-- navbar CSS -->
+<link rel="stylesheet" href="../public/resources/css/navbar.css" />
+<link rel="stylesheet" href="../public/resources/css/profile.css" />
+{% endblock %}
+{% block body %}
+{% include "navbar.html" %}
+<!-- body content goes here... -->
+<div class="container-fluid">
+    <div class="sidebar">
+        <div class="sidebar-image">
+            <img src="../public/resources/images/profile.png">
+        </div>
+        <span class="sidebarText">{{ session.DisplayName }}</span>
+        <div class="sidebarText">
+            <a href="#" class="sidebarText">Diary</a>
+            <a href="#" class="sidebarText">Request a commission</a>
+            <span>Following</span>
+            <div class="table-responsive images">
+                <table>
+                    <tr>
+                        <td>
+                            <a href="#">
+                                <img src="../public/resources/images/profile.png" height="32">
+                            </a>
+                        </td>
+                        <td>
+                            <a href="#">
+                                <img src="../public/resources/images/profile.png" height="32">
+                            </a>
+                        </td>
+                        <td>
+                            <a href="#">
+                                <img src="../public/resources/images/profile.png" height="32">
+                            </a>
+                        </td>
+                        <td>
+                            <a href="#">
+                                <img src="../public/resources/images/profile.png" height="32">
+                            </a>
+                        </td>
+                        <td>
+                            <span>...</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <span>Followers</span>
+            <div class="table-responsive images">
+                <table>
+                    <tr>
+                        <td>
+                            <a href="#">
+                                <img src="../public/resources/images/profile.png" height="32">
+                            </a>
+                        </td>
+                        <td>
+                            <a href="#">
+                                <img src="../public/resources/images/profile.png" height="32">
+                            </a>
+                        </td>
+                        <td>
+                            <a href="#">
+                                <img src="../public/resources/images/profile.png" height="32">
+                            </a>
+                        </td>
+                        <td>
+                            <a href="#">
+                                <img src="../public/resources/images/profile.png" height="32">
+                            </a>
+                        </td>
+                        <td>
+                            <span>...</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <span>External links</span>
+            <div class="table-repsonsive images">
+                <table>
+                    <tr>
+                        <td>
+                            <a href="#">
+                                <img src="../public/resources/images/icons/facebook.png" height="30">
+                            </a>
+                        </td>
+                        <td>
+                            <a href="#">
+                                <img src="../public/resources/images/icons/twitter.png" height="30">
+                            </a>
+                        </td>
+                        <td>
+                            <a href="#">
+                                <img src="../public/resources/images/icons/reddit.png" height="30">
+                            </a>
+                        </td>
+                        <td>
+                            <a href="#">
+                                <img src="../public/resources/images/icons/deviantart.png" height="30">
+                            </a>
+                        </td>
+                        <td>
+                            <span>...</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid content">
+        <div class="user-content">
+            <span class="title">Biography</span>
+            <br>
+            Biography goes here...
+        </div>
+        <div class="user-content">
+            <span class="title">Featured Posts</span>
+            <br>
+            Features posts goes here...
+        </div>
+        <div class="user-content">
+            <span class="title">All Posts</span>
+            <br>
+            All posts goes here...
+        </div>
+    </div>
+</div>
+{% endblock %}

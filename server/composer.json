@@ -1,0 +1,16 @@
+{
+  "name": "vendor_name/package_name",
+  "description": "description_text",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "author's name",
+      "email": "email@example.com"
+    }
+  ],
+  "require": {
+    "antnee/slim-skeleton-php7": "dev-master",
+    "bryanjhv/slim-session": "3.5.0"
+  }
+}

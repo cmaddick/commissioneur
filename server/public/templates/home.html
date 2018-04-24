@@ -1,0 +1,22 @@
+{% set title = 'Home' %}
+{% extends "base.html" %}
+{% block head %}
+<!-- navbar CSS -->
+<link rel="stylesheet" href="../public/resources/css/navbar.css" />
+<link rel="stylesheet" href="../public/resources/css/sidebar.css" />
+{% endblock %}
+{% block body %}
+{% include "navbar.html" %}
+<!-- body content start -->
+<div class="flex-container">
+    {% include "sidebar.html" %}
+    <div class="container-fluid content">
+        <div class="title">
+            <span>All Creations - Newly Uploaded</span>
+        </div>
+        <div>
+            <!-- div for images -->
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block head %}
+<!-- navbar CSS -->
+<link rel="stylesheet" href="../public/resources/css/navbar.css" />
+<link rel="stylesheet" href="../public/resources/css/sidebar.css" />
+{% endblock %}
+{% block body %}
+
+{% include "navbar.html" %}
+
+<!-- body content start -->
+<div class="flex-container">
+    {% include "sidebar.html" %}
+    <div class="container-fluid content">
+        <div class="title">
+            <span>{{submission.title}}</span>
+        </div>
+        <div>
+            <br>
+            <img src="{{submission.path}}"/>
+            <br>
+            Description: {{submission.description}}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
