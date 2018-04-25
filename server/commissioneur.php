@@ -214,7 +214,7 @@ $app->get('/submission/{submissionid}', function ($request, $response, $args) {
     // Get submission from database
     $pdo = $this->db;
 
-    if ($submission = Submission::get_submission($args['submissionid'])) {
+    if ($submission = Submission::get_submission($args['submissionid'], $pdo)) {
         return $this->view->render($response, 'submission.html', [
             'session' => $_SESSION,
             'submission' => $submission->get_submission_array()

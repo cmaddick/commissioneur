@@ -68,7 +68,7 @@ class Submission
         }
     }
 
-    private static function set_dbPath ($type, $uploadDir) {
+    private static function set_dbPath ($type) {
         // Sets the db relative path dependent on upload type
 
         if ($type === "image") {
