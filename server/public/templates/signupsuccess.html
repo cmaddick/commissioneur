@@ -1,6 +1,11 @@
+{% set title = 'Successful sign up' %}
 {% extends "base.html" %}
+{% block head %}
+<link rel="stylesheet" href="../public/resources/css/signin.css">
+{% endblock %}
 {% block body %}
-
-<p>Sign up was successful, please <a href="login">log in</a>.</p>
-
+<div class="signupsuccess">
+    <img src="../public/resources/images/logo-large.png" alt="Commissioneur logo" width="289" height="48" class="center">
+    <p>Sign up was successful, please <a href="/login">log in</a>.</p>
+</div>
 {% endblock %}

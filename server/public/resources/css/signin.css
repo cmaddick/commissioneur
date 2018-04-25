@@ -40,3 +40,12 @@ body {
 .dob-table td{
     padding-right: 10px;
 }
+
+.signupsuccess p {
+    margin-left: 10px;
+    font-size: 15px;
+}
+.signupsuccess img {
+    margin-left: 5px;
+    margin-bottom: 5px;
+}

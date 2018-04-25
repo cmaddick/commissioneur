@@ -1,8 +1,9 @@
+{% set title = 'Submission' %}
 {% extends "base.html" %}
 {% block head %}
 <!-- navbar CSS -->
 <link rel="stylesheet" href="../public/resources/css/navbar.css" />
-<link rel="stylesheet" href="../public/resources/css/sidebar.css" />
+<link rel="stylesheet" href="../public/resources/css/submission.css" />
 {% endblock %}
 {% block body %}
 
@@ -10,16 +11,67 @@
 
 <!-- body content start -->
 <div class="flex-container">
-    {% include "sidebar.html" %}
     <div class="container-fluid content">
-        <div class="title">
-            <span>{{submission.title}}</span>
+        <div class="row">
+            <div class="col-sm-8">
+                <img src="..\public\resources\images\test\wolves\190z04knmqboqjpg.jpg" class="img-responsive"/>
+            </div>
+            <div class=" col-sm-4 more-images">
+                <div class=" container media-body">
+                    <span class="more-images-title">More images from user</span>
+                    <div class="suggested-image">
+                        <div>
+                            <img src="..\public\resources\images\test\foxes\Red-Fox.png" class="img-responsive"/>
+                        </div>
+                        <div>
+                            <span class="image-title">Image title</span>
+                            <p>Brief description of the image...</p>
+                        </div>
+                    </div>
+                    <div class="suggested-image">
+                        <div>
+                            <img src="..\public\resources\images\test\dogs\171485438.jpg" class="img-responsive"/>
+                        </div>
+                        <div>
+                            <span class="image-title">Image title</span>
+                            <p>Brief description of the image...</p>
+                        </div>
+                    </div>
+                    <div class="suggested-image">
+                        <div>
+                            <img src="..\public\resources\images\test\other\forests-why-matter_63516847.jpg" class="img-responsive"/>
+                        </div>
+                        <div>
+                            <span class="image-title">Image title</span>
+                            <p>Brief description of the image...</p>
+                        </div>
+                    </div>
+                    <div class="suggested-image">
+                        <div>
+                            <img src="..\public\resources\images\test\wolves\wild-wolf.jpg" class="img-responsive"/>
+                        </div>
+                        <div>
+                            <span class="image-title">Image title</span>
+                            <p>Brief description of the image...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-            <br>
-            <img src="{{submission.path}}"/>
-            <br>
-            Description: {{submission.description}}
+        <div class="title">
+            <span>Title of submission</span>
+        </div>
+        <div class="user-container">
+            <div>
+                <img src="..\public\resources\images\profile.png"/>
+            </div>
+            <div>
+                <p id="title">User title</p>
+                <p>Description</p>
+            </div>
+            <div class="pull-right">
+                <p>tags/metadata</p>
+            </div>
         </div>
     </div>
 </div>

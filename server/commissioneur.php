@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+error_reporting(E_ERROR | E_PARSE);
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -123,13 +124,13 @@ $app->post('/login', function ($request, Response $response, $args) {
 
     $pdo = $this->db;
 
-    $stmt = $pdo->prepare('SELECT * FROM users WHERE Email = ?');
+    $stmt = $pdo->prepare('SELECT * FROM users WHERE EMAIL = ?');
     $stmt->execute([$email]);
     $row = $stmt->fetch();
 
     if($row) {
 
-        $dbPasswordHash = $row['Password'];
+        $dbPasswordHash = $row['PASSWORD'];
 
         if(password_verify($password, $dbPasswordHash)) {
             $userID = $row['UserID'];
@@ -230,11 +231,16 @@ $app->get('/submission/{submissionid}', function ($request, $response, $args) {
         ]);
     }
 
-})->setName('submission');;
+})->setName('submission2');; //change name when database is working properly
+
+// temp submission router for developing submissions page.
+$app->get('/submission', function ($request, $response, $args) {
+    return $this->view->render($response, 'submission.html');
+})->setName('submission');
 
 $app->get('/profile/{profileid}', function ($request, $response, $args) {
     return $this->view->render($response, 'profile.html');
-});
+})->setName('profile');;
 
 $app->get('/logout', function (Request $request, Response $response){
     session_destroy();
