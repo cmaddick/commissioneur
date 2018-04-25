@@ -131,7 +131,7 @@ $app->post('/login', function ($request, Response $response, $args) {
 
     if($row) {
 
-        $dbPasswordHash = $row['PASSWORD'];
+        $dbPasswordHash = $row['Password'];
 
         if(password_verify($password, $dbPasswordHash)) {
             $userID = $row['UserID'];
