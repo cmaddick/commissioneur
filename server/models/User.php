@@ -39,7 +39,29 @@ class User
     }
 
     public static function login_user($pdo, $email, $password) {
+        $stmt = $pdo->prepare('SELECT * FROM users WHERE EMAIL = ?');
+        $stmt->execute([$email]);
+        $row = $stmt->fetch();
 
+        if($row) {
+
+            $dbPasswordHash = $row['Password'];
+
+            if(password_verify($password, $dbPasswordHash)) {
+                $user = new User($row['id'], $row['Email'], $row['DisplayName']);
+                $userID = $row['UserID'];
+                $displayName = $row['DisplayName'];
+                $_SESSION['IsLoggedIn'] = 'true';
+                $_SESSION['UserID'] = $userID;
+                $_SESSION['DisplayName'] = $displayName;
+
+                return $user;
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 
     public static function register_user($pdo, $email, $displayName, $password, $rePassword) {

@@ -126,24 +126,11 @@ $app->post('/login', function ($request, Response $response, $args) {
 
     $pdo = $this->db;
 
-    $stmt = $pdo->prepare('SELECT * FROM users WHERE EMAIL = ?');
-    $stmt->execute([$email]);
-    $row = $stmt->fetch();
-
-    if($row) {
-
-        $dbPasswordHash = $row['Password'];
-
-        if(password_verify($password, $dbPasswordHash)) {
-            $userID = $row['UserID'];
-            $displayName = $row['DisplayName'];
-            $_SESSION['IsLoggedIn'] = 'true';
-            $_SESSION['UserID'] = $userID;
-            $_SESSION['DisplayName'] = $displayName;
-
-            $router = $this->router;
-            return $response->withStatus(303)->withHeader('Location', $router->pathFor('home'));
-        }
+    if ($user = User::login_user($pdo, $email, $password)){
+        $router = $this->router;
+        return $response->withStatus(303)->withHeader('Location', $router->pathFor('home'));
+    } else {
+        return $response->withStatus(404);
     }
 });
 
