@@ -1,5 +1,7 @@
 <?php
 
+use Slim\Http\UploadedFile;
+
 class Submission
 {
     private $pdo;
@@ -38,6 +40,7 @@ class Submission
 
         $submissionID = mt_rand(100000000, 999999999);
         $dbPath = self::set_dbPath($type, $uploadDir);
+        $uploadDir = self::set_upload_subdir($type, $uploadDir);
 
         if (!self::get_submission($submissionID, $pdo)) {
             // Handle file upload
@@ -58,7 +61,7 @@ class Submission
                 $stmt->bindParam(':contentDescription', $description);
                 $stmt->execute();
 
-                return self::get_submission($submissionID);
+                return self::get_submission($submissionID, $pdo);
             } else {
                 return null;
             }
@@ -69,13 +72,25 @@ class Submission
         // Sets the db relative path dependent on upload type
 
         if ($type === "image") {
-            $uploadDirectory = $uploadDir . '/images';
             $dbPath = "../public/resources/usercontent/images";
             return $dbPath;
         } elseif ($type === "audio") {
-            $uploadDirectory = $uploadDir . '/images';
             $dbPath = "../public/resources/usercontent/audio";
             return $dbPath;
+        } else {
+            return null;
+        }
+    }
+
+    private static function set_upload_subdir($type, $uploadDir)  {
+        // Appends the appropriate subdirectory to uploadDir for upload type
+
+        if ($type === "image") {
+            $uploadDirectory = $uploadDir . '/images';
+            return $uploadDirectory;
+        } elseif ($type === "audio") {
+            $uploadDirectory = $uploadDir . '/audio';
+            return $uploadDirectory;
         } else {
             return null;
         }

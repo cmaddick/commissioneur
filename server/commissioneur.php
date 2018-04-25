@@ -261,16 +261,23 @@ $app->get('/upload', function ($request, $response, $args) {
 $app->post('/upload', function(Request $request, Response $response) {
 
     $uploadDirectory = $this->get('upload_directory');
-    $dbPath = "";
 
     // Get form data
     $allPostPutVars = $request->getParsedBody();
     $uploadedFiles = $request->getUploadedFiles();
 
     $title = $allPostPutVars['inputTitle'];
-    $type = $allPostPutVars['inputType'];
     $description = $allPostPutVars['inputDescription'];
     $uploadedFile = $uploadedFiles['inputFile'];
+
+    // Find submission type
+    if ($allPostPutVars['type'] === 'art' || $allPostPutVars['type'] === 'crafts' || $allPostPutVars['type'] === 'photo') {
+        $type = 'image';
+    } elseif ($allPostPutVars === 'music') {
+        $type = 'audio';
+    } else {
+        $type = 'video';
+    }
 
     $pdo = $this->db;
 
