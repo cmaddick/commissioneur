@@ -9,6 +9,7 @@ use Slim\Http\UploadedFile;
 
 require 'vendor/autoload.php';
 require 'config.php';
+require 'models/Submission.php';
 
 // Create the application
 $app = new \Slim\App(['settings' => $config]);
@@ -210,27 +211,15 @@ $app->get('/signupsuccess', function ($request, $response, $args) {
 })->setName('signupsuccess');
 
 $app->get('/submission/{submissionid}', function ($request, $response, $args) {
-
     // Get submission from database
     $pdo = $this->db;
 
-    $stmt = $pdo->prepare('SELECT * FROM submissions WHERE SubmissionID = ?');
-    $stmt->execute([$args['submissionid']]);
-    $row = $stmt->fetch();
-
-    if ($row) {
-        $submission = [
-            'title' => $row['ContentTitle'],
-            'path' => $row['ContentPath'],
-            'description' => $row['ContentDescription']
-        ];
-
+    if ($submission = Submission::get_submission($args['submissionid'])) {
         return $this->view->render($response, 'submission.html', [
             'session' => $_SESSION,
-            'submission' => $submission
+            'submission' => $submission->get_submission_array()
         ]);
     }
-
 })->setName('submission2');; //change name when database is working properly
 
 // temp submission router for developing submissions page.
@@ -278,49 +267,20 @@ $app->post('/upload', function(Request $request, Response $response) {
     $allPostPutVars = $request->getParsedBody();
     $uploadedFiles = $request->getUploadedFiles();
 
-    $submissionID = mt_rand(100000000, 999999999);
     $title = $allPostPutVars['inputTitle'];
     $type = $allPostPutVars['inputType'];
     $description = $allPostPutVars['inputDescription'];
-
-    if ($type === "image") {
-        $uploadDirectory = $uploadDirectory . '/images';
-        $dbPath = "../public/resources/usercontent/images";
-    } elseif ($type === "audio") {
-        $uploadDirectory = $uploadDirectory . '/images';
-        $dbPath = "../public/resources/usercontent/audio";
-    }
+    $uploadedFile = $uploadedFiles['inputFile'];
 
     $pdo = $this->db;
 
-    // Check if submissionID is unique
-    $stmt = $pdo->prepare('SELECT * FROM submissions WHERE SubmissionID = ?');
-    $stmt->execute([$submissionID]);
-    $row = $stmt->fetch();
+    $submission = Submission::save_new_submission($pdo, $title, $type, $description, $uploadedFile, $uploadDirectory);
 
-    if (!$row) {
-        // Handle file upload
-        $uploadedFile = $uploadedFiles['inputFile'];
-        if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-            $filename = moveUploadedFile($uploadDirectory, $uploadedFile, $submissionID);
-        }
-
-        // Get relative path to submission
-        $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-        $dbPath = $dbPath . "/" . $submissionID . "." . $extension;
-
-        // Push to database
-        $stmt = $pdo->prepare('INSERT INTO `submissions` (`SubmissionID`, `SubmissionOwner`, `ContentType`, `ContentPath`, `ContentTitle`, `ContentDescription`) VALUES (:submissionid, :submissionOwner, :contentType, :contentPath, :contentTitle, :contentDescription)');
-        $stmt->bindParam(':submissionid', $submissionID);
-        $stmt->bindParam(':submissionOwner', $_SESSION['UserID']);
-        $stmt->bindParam(':contentType', $type);
-        $stmt->bindParam(':contentPath', $dbPath);
-        $stmt->bindParam(':contentTitle', $title);
-        $stmt->bindParam(':contentDescription', $description);
-        $stmt->execute();
-
+    if($submission) {
         $router = $this->router;
         return $response->withStatus(303)->withHeader('Location', $router->pathFor('submission', ['submissionid' => $submissionID]));
+    } else {
+        return $response->withStatus(404);
     }
 });
 
