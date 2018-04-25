@@ -10,6 +10,7 @@ use Slim\Http\UploadedFile;
 require 'vendor/autoload.php';
 require 'config.php';
 require 'models/Submission.php';
+require 'models/User.php';
 
 // Create the application
 $app = new \Slim\App(['settings' => $config]);
@@ -172,38 +173,19 @@ $app->post('/signup', function(Request $request, Response $response) {
     $allPostPutVars = $request->getParsedBody();
 
     $email = $allPostPutVars['inputEmail'];
-    $displayname = $allPostPutVars['inputDisplayName'];
+    $displayName = $allPostPutVars['inputDisplayName'];
     $password = $allPostPutVars['inputPassword'];
-    $repassword = $allPostPutVars['inputRePassword'];
-
-    $password = password_hash($password, PASSWORD_DEFAULT);
+    $rePassword = $allPostPutVars['inputRePassword'];
 
     $pdo = $this->db;
 
-    $stmt = $pdo->prepare('SELECT * FROM users WHERE Email = ?');
-    $stmt->execute([$email]);
-    $row = $stmt->fetch();
-
-    if (!$row) {
-        $userID = mt_rand(100000000, 999999999);
-        $stmt = $pdo->prepare('SELECT * FROM users WHERE UserID = ?');
-        $stmt->execute([$userID]);
-        $row = $stmt->fetch();
-
-        if (!$row) {
-            $stmt = $pdo->prepare('INSERT INTO `users` (`UserID`, `Email`, `Password`, `DisplayName`) VALUES (:userid, :email, :password, :displayname)');
-            $stmt->bindParam(':userid', $userID);
-            $stmt->bindParam(':email', $email);
-            $stmt->bindParam(':password', $password);
-            $stmt->bindParam(':displayname', $displayname);
-            $stmt->execute();
-
-            $router = $this->router;
-            return $response->withStatus(303)->withHeader('Location', $router->pathFor('signupsuccess'));
-        }
+    if (User::register_user($pdo, $email, $displayName, $password, $rePassword)) {
+        $router = $this->router;
+        return $response->withStatus(303)->withHeader('Location', $router->pathFor('signupsuccess'));
     } else {
-
+        return $response->withStatus(404);
     }
+
 });
 
 $app->get('/signupsuccess', function ($request, $response, $args) {
