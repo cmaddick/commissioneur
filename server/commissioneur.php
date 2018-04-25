@@ -297,15 +297,4 @@ $app->get('/resources/images/{data:\w+}', function($request, $response, $args) {
     return $response->withHeader('Content-Type', FILEINFO_MIME_TYPE);
 });
 
-function moveUploadedFile($directory, UploadedFile $uploadedFile, $id)
-{
-    $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-    $basename = bin2hex(random_bytes(8)); // see http://php.net/manual/en/function.random-bytes.php
-    $filename = sprintf('%s.%s', $id, $extension);
-
-    $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
-
-    return $filename;
-}
-
 $app->run();
