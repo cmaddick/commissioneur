@@ -192,6 +192,7 @@ $app->get('/submission/{submissionid}', function ($request, $response, $args) {
 })->setName('submission2');; //change name when database is working properly
 
 // temp submission router for developing submissions page.
+// TODO: Delete when submission fully implemented!
 $app->get('/submission', function ($request, $response, $args) {
     return $this->view->render($response, 'submission.html');
 })->setName('submission');
