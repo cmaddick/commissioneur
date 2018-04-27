@@ -50,4 +50,14 @@
 .user-container div {
     display: inline-block;
     vertical-align: top;
+    text-decoration: none;
+}
+
+.user-container a{
+    text-decoration: none;
+    color: #818181;
+}
+
+.user-container a:hover {
+    color: #4b4b4b;
 }
