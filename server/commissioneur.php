@@ -9,6 +9,8 @@ use Slim\Http\UploadedFile;
 
 require 'vendor/autoload.php';
 require 'config.php';
+require 'models/Submission.php';
+require 'models/User.php';
 
 // Create the application
 $app = new \Slim\App(['settings' => $config]);
@@ -124,24 +126,11 @@ $app->post('/login', function ($request, Response $response, $args) {
 
     $pdo = $this->db;
 
-    $stmt = $pdo->prepare('SELECT * FROM users WHERE EMAIL = ?');
-    $stmt->execute([$email]);
-    $row = $stmt->fetch();
-
-    if($row) {
-
-        $dbPasswordHash = $row['PASSWORD'];
-
-        if(password_verify($password, $dbPasswordHash)) {
-            $userID = $row['UserID'];
-            $displayName = $row['DisplayName'];
-            $_SESSION['IsLoggedIn'] = 'true';
-            $_SESSION['UserID'] = $userID;
-            $_SESSION['DisplayName'] = $displayName;
-
-            $router = $this->router;
-            return $response->withStatus(303)->withHeader('Location', $router->pathFor('home'));
-        }
+    if ($user = User::login_user($pdo, $email, $password)){
+        $router = $this->router;
+        return $response->withStatus(303)->withHeader('Location', $router->pathFor('home'));
+    } else {
+        return $response->withStatus(404);
     }
 });
 
@@ -171,38 +160,19 @@ $app->post('/signup', function(Request $request, Response $response) {
     $allPostPutVars = $request->getParsedBody();
 
     $email = $allPostPutVars['inputEmail'];
-    $displayname = $allPostPutVars['inputDisplayName'];
+    $displayName = $allPostPutVars['inputDisplayName'];
     $password = $allPostPutVars['inputPassword'];
-    $repassword = $allPostPutVars['inputRePassword'];
-
-    $password = password_hash($password, PASSWORD_DEFAULT);
+    $rePassword = $allPostPutVars['inputRePassword'];
 
     $pdo = $this->db;
 
-    $stmt = $pdo->prepare('SELECT * FROM users WHERE Email = ?');
-    $stmt->execute([$email]);
-    $row = $stmt->fetch();
-
-    if (!$row) {
-        $userID = mt_rand(100000000, 999999999);
-        $stmt = $pdo->prepare('SELECT * FROM users WHERE UserID = ?');
-        $stmt->execute([$userID]);
-        $row = $stmt->fetch();
-
-        if (!$row) {
-            $stmt = $pdo->prepare('INSERT INTO `users` (`UserID`, `Email`, `Password`, `DisplayName`) VALUES (:userid, :email, :password, :displayname)');
-            $stmt->bindParam(':userid', $userID);
-            $stmt->bindParam(':email', $email);
-            $stmt->bindParam(':password', $password);
-            $stmt->bindParam(':displayname', $displayname);
-            $stmt->execute();
-
-            $router = $this->router;
-            return $response->withStatus(303)->withHeader('Location', $router->pathFor('signupsuccess'));
-        }
+    if (User::register_user($pdo, $email, $displayName, $password, $rePassword)) {
+        $router = $this->router;
+        return $response->withStatus(303)->withHeader('Location', $router->pathFor('signupsuccess'));
     } else {
-
+        return $response->withStatus(404);
     }
+
 });
 
 $app->get('/signupsuccess', function ($request, $response, $args) {
@@ -210,27 +180,15 @@ $app->get('/signupsuccess', function ($request, $response, $args) {
 })->setName('signupsuccess');
 
 $app->get('/submission/{submissionid}', function ($request, $response, $args) {
-
     // Get submission from database
     $pdo = $this->db;
 
-    $stmt = $pdo->prepare('SELECT * FROM submissions WHERE SubmissionID = ?');
-    $stmt->execute([$args['submissionid']]);
-    $row = $stmt->fetch();
-
-    if ($row) {
-        $submission = [
-            'title' => $row['ContentTitle'],
-            'path' => $row['ContentPath'],
-            'description' => $row['ContentDescription']
-        ];
-
+    if ($submission = Submission::get_submission($args['submissionid'], $pdo)) {
         return $this->view->render($response, 'submission.html', [
             'session' => $_SESSION,
-            'submission' => $submission
+            'submission' => $submission->get_submission_array()
         ]);
     }
-
 })->setName('submission2');; //change name when database is working properly
 
 // temp submission router for developing submissions page.
@@ -272,55 +230,33 @@ $app->get('/upload', function ($request, $response, $args) {
 $app->post('/upload', function(Request $request, Response $response) {
 
     $uploadDirectory = $this->get('upload_directory');
-    $dbPath = "";
 
     // Get form data
     $allPostPutVars = $request->getParsedBody();
     $uploadedFiles = $request->getUploadedFiles();
 
-    $submissionID = mt_rand(100000000, 999999999);
     $title = $allPostPutVars['inputTitle'];
-    $type = $allPostPutVars['inputType'];
     $description = $allPostPutVars['inputDescription'];
+    $uploadedFile = $uploadedFiles['inputFile'];
 
-    if ($type === "image") {
-        $uploadDirectory = $uploadDirectory . '/images';
-        $dbPath = "../public/resources/usercontent/images";
-    } elseif ($type === "audio") {
-        $uploadDirectory = $uploadDirectory . '/images';
-        $dbPath = "../public/resources/usercontent/audio";
+    // Find submission type
+    if ($allPostPutVars['type'] === 'art' || $allPostPutVars['type'] === 'crafts' || $allPostPutVars['type'] === 'photo') {
+        $type = 'image';
+    } elseif ($allPostPutVars === 'music') {
+        $type = 'audio';
+    } else {
+        $type = 'video';
     }
 
     $pdo = $this->db;
 
-    // Check if submissionID is unique
-    $stmt = $pdo->prepare('SELECT * FROM submissions WHERE SubmissionID = ?');
-    $stmt->execute([$submissionID]);
-    $row = $stmt->fetch();
+    $submission = Submission::save_new_submission($pdo, $title, $type, $description, $uploadedFile, $uploadDirectory);
 
-    if (!$row) {
-        // Handle file upload
-        $uploadedFile = $uploadedFiles['inputFile'];
-        if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-            $filename = moveUploadedFile($uploadDirectory, $uploadedFile, $submissionID);
-        }
-
-        // Get relative path to submission
-        $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-        $dbPath = $dbPath . "/" . $submissionID . "." . $extension;
-
-        // Push to database
-        $stmt = $pdo->prepare('INSERT INTO `submissions` (`SubmissionID`, `SubmissionOwner`, `ContentType`, `ContentPath`, `ContentTitle`, `ContentDescription`) VALUES (:submissionid, :submissionOwner, :contentType, :contentPath, :contentTitle, :contentDescription)');
-        $stmt->bindParam(':submissionid', $submissionID);
-        $stmt->bindParam(':submissionOwner', $_SESSION['UserID']);
-        $stmt->bindParam(':contentType', $type);
-        $stmt->bindParam(':contentPath', $dbPath);
-        $stmt->bindParam(':contentTitle', $title);
-        $stmt->bindParam(':contentDescription', $description);
-        $stmt->execute();
-
+    if($submission) {
         $router = $this->router;
         return $response->withStatus(303)->withHeader('Location', $router->pathFor('submission', ['submissionid' => $submissionID]));
+    } else {
+        return $response->withStatus(404);
     }
 });
 
@@ -336,16 +272,5 @@ $app->get('/resources/images/{data:\w+}', function($request, $response, $args) {
     $response->write($image);
     return $response->withHeader('Content-Type', FILEINFO_MIME_TYPE);
 });
-
-function moveUploadedFile($directory, UploadedFile $uploadedFile, $id)
-{
-    $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-    $basename = bin2hex(random_bytes(8)); // see http://php.net/manual/en/function.random-bytes.php
-    $filename = sprintf('%s.%s', $id, $extension);
-
-    $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
-
-    return $filename;
-}
 
 $app->run();

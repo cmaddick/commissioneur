@@ -1,0 +1,1 @@
+This directory contains all of the class files required for the project
