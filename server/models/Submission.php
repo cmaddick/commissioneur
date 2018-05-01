@@ -68,6 +68,10 @@ class Submission
         }
     }
 
+    public function getID(){
+        return $this->id;
+    }
+
     private static function set_dbPath ($type) {
         // Sets the db relative path dependent on upload type
 

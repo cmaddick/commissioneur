@@ -152,7 +152,7 @@ $app->get('/signup', function ($request, $response, $args) {
         'title' => 'Sign up',
         'csrf' => $csrfKeysValues
     ]);
-});
+})->setName('signup');
 
 $app->post('/signup', function(Request $request, Response $response) {
 
@@ -179,7 +179,7 @@ $app->get('/signupsuccess', function ($request, $response, $args) {
     return $this->view->render($response, 'signupsuccess.html');
 })->setName('signupsuccess');
 
-$app->get('/submission/{submissionid}', function ($request, $response, $args) {
+$app->get('/submission/{submissionid}', function ($request, Response $response, $args) {
     // Get submission from database
     $pdo = $this->db;
 
@@ -188,13 +188,9 @@ $app->get('/submission/{submissionid}', function ($request, $response, $args) {
             'session' => $_SESSION,
             'submission' => $submission->get_submission_array()
         ]);
+    } else {
+        return $response->withStatus(404);
     }
-})->setName('submission2');; //change name when database is working properly
-
-// temp submission router for developing submissions page.
-// TODO: Delete when submission fully implemented!
-$app->get('/submission', function ($request, $response, $args) {
-    return $this->view->render($response, 'submission.html');
 })->setName('submission');
 
 $app->get('/profile/{profileid}', function ($request, $response, $args) {
@@ -206,7 +202,7 @@ $app->get('/logout', function (Request $request, Response $response){
 
     $router = $this->router;
     return $response->withStatus(303)->withHeader('Location', $router->pathFor('home'));
-});
+})->setName('logout');
 
 $app->get('/upload', function ($request, $response, $args) {
     // CSRF token name and value
@@ -226,7 +222,7 @@ $app->get('/upload', function ($request, $response, $args) {
         'session' => $_SESSION,
         'csrf' => $csrfKeysValues
     ]);
-});
+})->setName('upload');
 
 $app->post('/upload', function(Request $request, Response $response) {
 
@@ -254,8 +250,8 @@ $app->post('/upload', function(Request $request, Response $response) {
     $submission = Submission::save_new_submission($pdo, $title, $type, $description, $uploadedFile, $uploadDirectory);
 
     if($submission) {
-        $router = $this->router;
-        return $response->withStatus(303)->withHeader('Location', $router->pathFor('submission', ['submissionid' => $submissionID]));
+        $url = $this->router->pathFor('submission', ['submissionid' => $submission->getID()]);
+        return $response->withStatus(303)->withHeader('Location', $url);
     } else {
         return $response->withStatus(404);
     }
