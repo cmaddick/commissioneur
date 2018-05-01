@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-error_reporting(E_ERROR | E_PARSE);
+error_reporting(E_ERROR | E_PARSE); // suppress slim warnings - comment out if nessecary
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -61,6 +61,13 @@ $container['session'] = function ($c) {
 
 // Set file upload directory
 $container['upload_directory'] = __DIR__ . '/public/resources/usercontent';
+
+// overwrite the default slim error page with a custom designed one
+$container['notFoundHandler'] = function ($c) {
+    return function ($request, $response) use ($c) {
+        return $c['view']->render($response, '404.html')->withStatus(404);
+    };
+};
 
 // Routing functions
 $app->get('/hello/{name}', function (Request $request, Response $response, array $args) {
