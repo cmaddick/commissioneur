@@ -1,6 +1,11 @@
 .heading{
+     font-size: 20px;
+     padding-left: 5px;
+}
+
+.heading-centre{
     font-size: 20px;
-    padding-left: 5px;
+    text-align: center;
 }
 
 .button-wrapper{

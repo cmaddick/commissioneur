@@ -7,6 +7,8 @@
 {% block body %}
 {% include "navbar.html" %}
 <p class="heading">Upload a file...</p>
+{% if session.IsLoggedIn is same as("true") %}
+
 <div class="container">
     <form action="upload" method="post" enctype="multipart/form-data">
         <div class="table-responsive">
@@ -131,5 +133,8 @@
         </div>
     </form>
 </div>
+{% else %}
+<p class="heading-centre">Login or Sign up to submit an artwork to Commissioneur.</p>
+{% endif %}
 {% endblock %}
 
