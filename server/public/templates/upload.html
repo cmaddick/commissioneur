@@ -7,8 +7,8 @@
 {% block body %}
 {% include "navbar.html" %}
 <p class="heading">Upload a file...</p>
-{% if session.IsLoggedIn is same as("true") %}
 
+{% if session.IsLoggedIn is same as("true") %}
 <div class="container">
     <form action="upload" method="post" enctype="multipart/form-data">
         <div class="table-responsive">
@@ -23,7 +23,7 @@
                             <table>
                                 <tr>
                                     <td width="168px">
-                                        <input type="radio" id="typeArt" name="type" value="art">
+                                        <input type="radio" id="typeArt" name="type" value="art" checked="checked">
                                         <label for="typeArt">Art</label>
                                         <br>
                                         <select name="inputGenreArt">
@@ -133,8 +133,11 @@
         </div>
     </form>
 </div>
+
 {% else %}
+
 <p class="heading-centre">Login or Sign up to submit an artwork to Commissioneur.</p>
 {% endif %}
+
 {% endblock %}
 
