@@ -4,6 +4,7 @@
 <!-- navbar CSS -->
 <link rel="stylesheet" href="public/resources/css/navbar.css" />
 <link rel="stylesheet" href="public/resources/css/sidebar.css" />
+<link rel="stylesheet" href="public/resources/css/home.css" />
 {% endblock %}
 {% block body %}
 {% include "navbar.html" %}
@@ -12,10 +13,18 @@
     {% include "sidebar.html" %}
     <div class="container-fluid content">
         <div class="title">
-            <span>All Creations - Newly Uploaded</span>
+            <span>All Creations</span>
         </div>
-        <div>
+        <div class="column">
             <!-- div for images -->
+            {% for i in 0..20 %}
+            <div class="col-lg-3 col-md-4 col-xs-6 images">
+                <a href="#"><img src="public/resources/images/test/foxes/AdobeStock_119595480_reduced.jpg" style="height:250px"></a>
+                <div class="user-title">
+                    <a href="#"><p>Image title by Username</p></a>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </div>

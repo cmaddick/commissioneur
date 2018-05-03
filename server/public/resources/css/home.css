@@ -1,0 +1,13 @@
+.user-title a {
+    font-size: 15px;
+    text-decoration: none;
+    color: #ababab;
+}
+
+.user-title a:hover {
+    color: #4b4b4b;
+}
+
+.images {
+    padding: 5px 5px 5px 5px;
+}
