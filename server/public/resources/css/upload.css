@@ -20,3 +20,12 @@
 span.required{
     color:#FF0000;
 }
+
+.login-message a{
+    text-decoration: none;
+    color: #818181;
+}
+
+.login-message a:hover {
+    color: #4b4b4b;
+}

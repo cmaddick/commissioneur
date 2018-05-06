@@ -17,9 +17,9 @@
         </div>
         <div class="column">
             <!-- div for images -->
-            {% for i in 0..20 %}
+            {% for submission in recentSubmissions %}
             <div class="col-lg-3 col-md-4 col-xs-6 images">
-                <a href="#"><img src="public/resources/images/test/foxes/AdobeStock_119595480_reduced.jpg" style="height:250px"></a>
+                <a href="submission/{{submission.id}}"><img src="{{submission.path}}" style="object-fit:cover;width:300px;height:250px;"></a>
                 <div class="user-title">
                     <a href="#"><p>Image title by Username</p></a>
                 </div>

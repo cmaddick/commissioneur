@@ -78,8 +78,10 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
 });
 
 $app->get('/home', function ($request, $response, $args) {
+    $recentSubmissions = Submission::get_recent_submissions($this->db);
     return $this->view->render($response, 'home.html', [
-        'session' => $_SESSION
+        'session' => $_SESSION,
+        'recentSubmissions' => $recentSubmissions
     ]);
 })->setName('home');
 

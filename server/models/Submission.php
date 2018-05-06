@@ -5,21 +5,25 @@ use Slim\Http\UploadedFile;
 class Submission
 {
     private $pdo;
+    private $ownerID = 0;
     private $id = 0;
     private $title = '';
     private $path = '';
     private $description = '';
+    private $datetimeUploaded = '';
 
-    public function __construct($id, $title, $path, $description, $pdo) {
+    public function __construct($id, $ownerID, $title, $path, $description, $datetimeUploaded, $pdo) {
         $this->pdo = $pdo;
 
         $this->id = $id;
+        $this->ownerID = $ownerID;
         $this->title = $title;
         $this->path = $path;
         $this->description = $description;
+        $this->datetimeUploaded = $datetimeUploaded;
     }
 
-    public static function get_submission($submissionID, $pdo) {
+    public static function get_submission($submissionID, PDO $pdo) {
         // Static factory method for creating submission objects
 
         $stmt = $pdo->prepare('SELECT * FROM submissions WHERE SubmissionID = ?');
@@ -27,7 +31,7 @@ class Submission
         $row = $stmt->fetch();
 
         if ($row) {
-            $newSubmission = new Submission($submissionID, $row['ContentTitle'], $row['ContentPath'], $row['ContentDescription'], $pdo);
+            $newSubmission = new Submission($submissionID, $row['SubmissionOwner'], $row['ContentTitle'], $row['ContentPath'], $row['ContentDescription'], $row['DatetimeUploaded'], $pdo);
 
             return $newSubmission;
         } else {
@@ -35,12 +39,32 @@ class Submission
         }
     }
 
-    public static function save_new_submission($pdo, $title, $type, $description, $file, $uploadDir) {
+    public static function get_recent_submissions(PDO $pdo, $limit = 21) {
+        $stmt = $pdo->prepare('SELECT * FROM submissions ORDER BY DatetimeUploaded DESC LIMIT ' . $limit);
+        $stmt->execute();
+        $rows = $stmt->fetchAll();
+
+        $submissions = [];
+
+        if ($rows) {
+            foreach ($rows as $row) {
+                $newSubmission = new Submission($row['SubmissionID'], $row['SubmissionOwner'], $row['ContentTitle'], $row['ContentPath'], $row['ContentDescription'], $row['DatetimeUploaded'], $pdo);
+                $newSubmission = $newSubmission->get_submission_array();
+                array_push($submissions, $newSubmission);
+            }
+            return $submissions;
+        } else {
+            return null;
+        }
+    }
+
+    public static function save_new_submission(PDO $pdo, $title, $type, $description, $file, $uploadDir) {
         // Prepares file upload and adds new submission entry to database
 
         $submissionID = mt_rand(100000000, 999999999);
         $dbPath = self::set_dbPath($type, $uploadDir);
         $uploadDir = self::set_upload_subdir($type, $uploadDir);
+        $uploadedDatetime = date('Y-m-d H:i:s T');
 
         if (!self::get_submission($submissionID, $pdo)) {
             // Handle file upload
@@ -52,13 +76,14 @@ class Submission
                 $dbPath = $dbPath . "/" . $submissionID . "." . $extension;
 
                 // Push to database
-                $stmt = $pdo->prepare('INSERT INTO `submissions` (`SubmissionID`, `SubmissionOwner`, `ContentType`, `ContentPath`, `ContentTitle`, `ContentDescription`) VALUES (:submissionid, :submissionOwner, :contentType, :contentPath, :contentTitle, :contentDescription)');
+                $stmt = $pdo->prepare('INSERT INTO `submissions` (`SubmissionID`, `SubmissionOwner`, `ContentType`, `ContentPath`, `ContentTitle`, `ContentDescription`, `DatetimeUploaded`) VALUES (:submissionid, :submissionOwner, :contentType, :contentPath, :contentTitle, :contentDescription, :datetimeUploaded)');
                 $stmt->bindParam(':submissionid', $submissionID);
                 $stmt->bindParam(':submissionOwner', $_SESSION['UserID']);
                 $stmt->bindParam(':contentType', $type);
                 $stmt->bindParam(':contentPath', $dbPath);
                 $stmt->bindParam(':contentTitle', $title);
                 $stmt->bindParam(':contentDescription', $description);
+                $stmt->bindParam(':datetimeUploaded', $uploadedDatetime);
                 $stmt->execute();
 
                 return self::get_submission($submissionID, $pdo);
@@ -119,9 +144,11 @@ class Submission
 
         $submissionArray = [
             'id' => $this->id,
+            'ownerID' => $this->ownerID,
             'title' => $this->title,
             'path' => $this->path,
-            'description' => $this->description
+            'description' => $this->description,
+            'datetimeUploaded' => $this->datetimeUploaded
         ];
 
         return $submissionArray;
